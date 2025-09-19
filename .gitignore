@@ -8,6 +8,7 @@ Release/
 # ---- IDE / Editors ----
 .idea/
 .vscode/
+.vs/
 *.suo
 *.user
 *.userosscache
@@ -26,9 +27,10 @@ Thumbs.db
 # ---- Config / Secrets ----
 *.env
 .env.*
-appsettings.Development.json
-appsettings.Local.json
+appsettings.*.json
+!appsettings.json
 secrets.json
+**/Properties/launchSettings.json
 
 # ---- Docker ----
 docker-compose.override.yml
