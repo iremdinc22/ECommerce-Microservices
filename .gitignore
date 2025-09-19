@@ -1,0 +1,63 @@
+# ---- Build outputs (C#/.NET) ----
+bin/
+obj/
+out/
+Debug/
+Release/
+
+# ---- IDE / Editors ----
+.idea/
+.vscode/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.code-workspace
+
+# ---- Logs ----
+*.log
+logs/
+log/
+
+# ---- OS files ----
+.DS_Store
+Thumbs.db
+
+# ---- Config / Secrets ----
+*.env
+.env.*
+appsettings.Development.json
+appsettings.Local.json
+secrets.json
+
+# ---- Docker ----
+docker-compose.override.yml
+docker-compose.local.yml
+docker-compose.dev.yml
+
+# ---- Databases ----
+# SQLite local db
+*.db
+*.db-shm
+*.db-wal
+
+# PostgreSQL & Mongo local dev data folders
+postgres-data/
+mongo-data/
+
+# ---- Test / Coverage ----
+coverage/
+*.coverage
+*.coveragexml
+TestResults/
+
+# ---- NuGet / Packages ----
+*.nupkg
+*.snupkg
+packages/
+.nuget/
+
+# ---- Node.js (eğer frontend varsa) ----
+node_modules/
+dist/
+build/
