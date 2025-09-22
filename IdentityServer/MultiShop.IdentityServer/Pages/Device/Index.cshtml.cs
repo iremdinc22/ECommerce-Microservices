@@ -19,15 +19,18 @@ public class Index : PageModel
     private readonly IDeviceFlowInteractionService _interaction;
     private readonly IEventService _events;
     private readonly IOptions<IdentityServerOptions> _options;
+    private readonly ILogger<Index> _logger;
 
     public Index(
         IDeviceFlowInteractionService interaction,
         IEventService eventService,
-        IOptions<IdentityServerOptions> options)
+        IOptions<IdentityServerOptions> options,
+        ILogger<Index> logger)
     {
         _interaction = interaction;
         _events = eventService;
         _options = options;
+        _logger = logger;
     }
 
     public ViewModel View { get; set; } = default!;
@@ -59,10 +62,7 @@ public class Index : PageModel
     public async Task<IActionResult> OnPost()
     {
         var request = await _interaction.GetAuthorizationContextAsync(Input.UserCode ?? throw new ArgumentNullException(nameof(Input.UserCode)));
-        if (request == null)
-        {
-            return RedirectToPage("/Home/Error/Index");
-        }
+        if (request == null) return RedirectToPage("/Home/Error/Index");
 
         ConsentResponse? grantedConsent = null;
 
@@ -177,33 +177,42 @@ public class Index : PageModel
         return vm;
     }
 
-    private static ScopeViewModel CreateScopeViewModel(IdentityResource identity, bool check) => new ScopeViewModel
+    private static ScopeViewModel CreateScopeViewModel(IdentityResource identity, bool check)
     {
-        Value = identity.Name,
-        DisplayName = identity.DisplayName ?? identity.Name,
-        Description = identity.Description,
-        Emphasize = identity.Emphasize,
-        Required = identity.Required,
-        Checked = check || identity.Required
-    };
+        return new ScopeViewModel
+        {
+            Value = identity.Name,
+            DisplayName = identity.DisplayName ?? identity.Name,
+            Description = identity.Description,
+            Emphasize = identity.Emphasize,
+            Required = identity.Required,
+            Checked = check || identity.Required
+        };
+    }
 
-    private static ScopeViewModel CreateScopeViewModel(ParsedScopeValue parsedScopeValue, ApiScope apiScope, bool check) => new ScopeViewModel
+    private static ScopeViewModel CreateScopeViewModel(ParsedScopeValue parsedScopeValue, ApiScope apiScope, bool check)
     {
-        Value = parsedScopeValue.RawValue,
-        // todo: use the parsed scope value in the display?
-        DisplayName = apiScope.DisplayName ?? apiScope.Name,
-        Description = apiScope.Description,
-        Emphasize = apiScope.Emphasize,
-        Required = apiScope.Required,
-        Checked = check || apiScope.Required
-    };
+        return new ScopeViewModel
+        {
+            Value = parsedScopeValue.RawValue,
+            // todo: use the parsed scope value in the display?
+            DisplayName = apiScope.DisplayName ?? apiScope.Name,
+            Description = apiScope.Description,
+            Emphasize = apiScope.Emphasize,
+            Required = apiScope.Required,
+            Checked = check || apiScope.Required
+        };
+    }
 
-    private static ScopeViewModel GetOfflineAccessScope(bool check) => new ScopeViewModel
+    private static ScopeViewModel GetOfflineAccessScope(bool check)
     {
-        Value = Duende.IdentityServer.IdentityServerConstants.StandardScopes.OfflineAccess,
-        DisplayName = DeviceOptions.OfflineAccessDisplayName,
-        Description = DeviceOptions.OfflineAccessDescription,
-        Emphasize = true,
-        Checked = check
-    };
+        return new ScopeViewModel
+        {
+            Value = Duende.IdentityServer.IdentityServerConstants.StandardScopes.OfflineAccess,
+            DisplayName = DeviceOptions.OfflineAccessDisplayName,
+            Description = DeviceOptions.OfflineAccessDescription,
+            Emphasize = true,
+            Checked = check
+        };
+    }
 }

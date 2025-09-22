@@ -52,10 +52,7 @@ public class Index : PageModel
     {
         // validate return url is still valid
         var request = await _interaction.GetAuthorizationContextAsync(Input.ReturnUrl);
-        if (request == null)
-        {
-            return RedirectToPage("/Home/Error/Index");
-        }
+        if (request == null) return RedirectToPage("/Home/Error/Index");
 
         ConsentResponse? grantedConsent = null;
 
@@ -188,16 +185,19 @@ public class Index : PageModel
         return vm;
     }
 
-    private static ScopeViewModel CreateScopeViewModel(IdentityResource identity, bool check) => new ScopeViewModel
+    private static ScopeViewModel CreateScopeViewModel(IdentityResource identity, bool check)
     {
-        Name = identity.Name,
-        Value = identity.Name,
-        DisplayName = identity.DisplayName ?? identity.Name,
-        Description = identity.Description,
-        Emphasize = identity.Emphasize,
-        Required = identity.Required,
-        Checked = check || identity.Required
-    };
+        return new ScopeViewModel
+        {
+            Name = identity.Name,
+            Value = identity.Name,
+            DisplayName = identity.DisplayName ?? identity.Name,
+            Description = identity.Description,
+            Emphasize = identity.Emphasize,
+            Required = identity.Required,
+            Checked = check || identity.Required
+        };
+    }
 
     private static ScopeViewModel CreateScopeViewModel(ParsedScopeValue parsedScopeValue, ApiScope apiScope, bool check)
     {
@@ -219,12 +219,15 @@ public class Index : PageModel
         };
     }
 
-    private static ScopeViewModel CreateOfflineAccessScope(bool check) => new ScopeViewModel
+    private static ScopeViewModel CreateOfflineAccessScope(bool check)
     {
-        Value = Duende.IdentityServer.IdentityServerConstants.StandardScopes.OfflineAccess,
-        DisplayName = ConsentOptions.OfflineAccessDisplayName,
-        Description = ConsentOptions.OfflineAccessDescription,
-        Emphasize = true,
-        Checked = check
-    };
+        return new ScopeViewModel
+        {
+            Value = Duende.IdentityServer.IdentityServerConstants.StandardScopes.OfflineAccess,
+            DisplayName = ConsentOptions.OfflineAccessDisplayName,
+            Description = ConsentOptions.OfflineAccessDescription,
+            Emphasize = true,
+            Checked = check
+        };
+    }
 }

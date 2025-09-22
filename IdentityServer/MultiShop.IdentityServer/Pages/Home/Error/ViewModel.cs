@@ -8,7 +8,10 @@ public class ViewModel
     {
     }
 
-    public ViewModel(string error) => Error = new ErrorMessage { Error = error };
+    public ViewModel(string error)
+    {
+        Error = new ErrorMessage { Error = error };
+    }
 
     public ErrorMessage? Error { get; set; }
 }
