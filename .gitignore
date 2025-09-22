@@ -27,8 +27,9 @@ Thumbs.db
 # ---- Config / Secrets ----
 *.env
 .env.*
-appsettings.*.json
-!appsettings.json
+# Ignore all appsettings.json in all folders
+**/appsettings.json
+**/appsettings.*.json
 secrets.json
 **/Properties/launchSettings.json
 
