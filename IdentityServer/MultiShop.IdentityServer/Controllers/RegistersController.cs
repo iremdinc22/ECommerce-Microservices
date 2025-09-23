@@ -1,12 +1,14 @@
+using Microsoft.AspNetCore.Authorization;   // <-- ekle
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Duende.IdentityServer;                // <-- ekle (LocalApi.PolicyName için)
 using MultiShop.IdentityServer.Models;
-using System.Threading.Tasks;
 using MultiShop.IdentityServer.Dtos;
-
+using System.Threading.Tasks;
 
 namespace MultiShop.IdentityServer.Controllers
 {
+    [Authorize(Policy = Duende.IdentityServer.IdentityServerConstants.LocalApi.PolicyName)]
     [Route("api/[controller]")]
     [ApiController]
     public class RegistersController : ControllerBase

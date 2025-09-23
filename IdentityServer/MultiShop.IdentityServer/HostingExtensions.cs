@@ -1,5 +1,5 @@
 using System.Globalization;
-using Duende.IdentityServer;
+using Duende.IdentityServer;    // LocalApi.PolicyName için
 using MultiShop.IdentityServer.Data;
 using MultiShop.IdentityServer.Models;
 using Microsoft.AspNetCore.Identity;
@@ -7,7 +7,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Serilog;
 using Serilog.Filters;
-
+using Microsoft.AspNetCore.Authorization;   // Authorize için
+            
 namespace MultiShop.IdentityServer;
 
 internal static class HostingExtensions
@@ -49,13 +50,15 @@ internal static class HostingExtensions
     public static WebApplication ConfigureServices(this WebApplicationBuilder builder)
     {
         builder.Services.AddRazorPages();
-
+        
         builder.Services.AddDbContext<ApplicationDbContext>(options =>
             options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
         builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
             .AddEntityFrameworkStores<ApplicationDbContext>()
             .AddDefaultTokenProviders();
+        
+        builder.Services.AddLocalApiAuthentication();
 
         builder.Services
             .AddIdentityServer(options =>
@@ -112,6 +115,7 @@ internal static class HostingExtensions
         app.UseStaticFiles();
         app.UseRouting();
         app.UseIdentityServer();
+        app.UseAuthentication();
         app.UseAuthorization();
 
 // 🔹 Attribute-routed API controller'ları aktif et

@@ -1,8 +1,19 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using MultiShop.Discount.Context;
 using MultiShop.Discount.Services;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.Authority = builder.Configuration["IdentityServerUrl"]; // IdentityServer URL
+        options.Audience  = builder.Configuration["Audience"]; // ApiResource adı
+        options.RequireHttpsMetadata = false; // dev ortamı için
+    });
+
+builder.Services.AddAuthorization(); // ✅ ekle
 
 // EF Core
 builder.Services.AddDbContext<DapperContext>(options =>
@@ -30,5 +41,9 @@ if (app.Environment.IsDevelopment())
     });
 }
 
+
+app.UseHttpsRedirection();
+app.UseAuthentication();
+app.UseAuthorization();
 app.MapControllers();
 app.Run();
