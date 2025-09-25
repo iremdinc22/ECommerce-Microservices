@@ -9,5 +9,9 @@ public class LoginService : ILoginService
       _httpContextAccessor = httpContextAccessor;
    }
 
-   public string GetUserId => _httpContextAccessor.HttpContext.User.FindFirst("sub").Value;
+   public string GetUserId =>
+      _httpContextAccessor.HttpContext?.User?.FindFirst("sub")?.Value
+      ?? throw new UnauthorizedAccessException("Unauthorized: missing authentication or 'sub' claim.");
+
+
 }

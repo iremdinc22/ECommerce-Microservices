@@ -27,6 +27,16 @@ builder.Services
         options.Authority = builder.Configuration["IdentityServerUrl"]; // e.g. http://localhost:5001
         options.Audience  = builder.Configuration["Audience"];          // e.g. ResourceBasket
         options.RequireHttpsMetadata = false; // DEV için; prod'da true yap
+        
+        
+        // >>> kritik:
+        options.MapInboundClaims = false;
+        options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+        {
+            NameClaimType = "sub", 
+            RoleClaimType = "role"  
+        };
+
     });
 
 builder.Services.AddHttpContextAccessor();
