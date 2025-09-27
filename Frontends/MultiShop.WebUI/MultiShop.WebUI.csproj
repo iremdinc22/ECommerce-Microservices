@@ -26,4 +26,8 @@
       <AdditionalFiles Include="Views\Shared\Components\_HeadUILayoutComponentPartial\Default.cshtml" />
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\MultiShop.DtoLayer\MultiShop.DtoLayer.csproj" />
+    </ItemGroup>
+
 </Project>
