@@ -7,6 +7,9 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <Folder Include="Areas\Admin\Controllers\" />
+      <Folder Include="Areas\Admin\Data\" />
+      <Folder Include="Areas\Admin\Models\" />
       <Folder Include="Controllers\" />
     </ItemGroup>
 
@@ -19,6 +22,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <AdditionalFiles Include="Areas\Admin\Views\Shared\Components\_AdminLayoutHeadComponentPartial\Default.cshtml" />
       <AdditionalFiles Include="Views\Shared\Components\_HeadUILayoutComponentPartial\Default.cshtml" />
     </ItemGroup>
 
