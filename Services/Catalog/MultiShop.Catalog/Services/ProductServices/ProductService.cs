@@ -9,6 +9,7 @@ namespace MultiShop.Catalog.Services.ProductServices;
 public class ProductService : IProductService
 {
     private readonly IMongoCollection<Product> _productCollection;
+    private readonly IMongoCollection<Category> _categoryCollection;
     private readonly IMapper _mapper;
 
     public ProductService(IMapper mapper, IDatabaseSettings databaseSettings)
@@ -17,6 +18,7 @@ public class ProductService : IProductService
         var database = client.GetDatabase(databaseSettings.DatabaseName);
         _productCollection = database.GetCollection<Product>(databaseSettings.ProductCollectionName);
         _mapper = mapper;
+        _categoryCollection =database.GetCollection<Category>(databaseSettings.CategoryCollectionName);
     }
     public async Task  CreateProductAsync(CreateProductDto createProductDto)
     {
@@ -41,10 +43,27 @@ public class ProductService : IProductService
 
        return _mapper.Map<GetByIdProductDto>(values);
     }
-
+    
     public Task UpdateProductAsync(UpdateProductDto updateProductDto)
     {
         var value =  _mapper.Map<Product>(updateProductDto);
         return _productCollection.ReplaceOneAsync(x => x.ProductId == updateProductDto.ProductId, value);
     }
+    
+    public async Task<List<ResultProductsWithCategoryDto>> GetProductsWithCategoryAsync()
+    {
+        var values = await _productCollection.Find(x => true).ToListAsync();
+
+        foreach (var item in values)
+        {
+            item.Category = await _categoryCollection
+                .Find(x => x.CategoryId == item.CategoryId)
+                .FirstOrDefaultAsync();
+        }
+
+        // === ÖNEMLİ: Liste olarak map et ===
+        return _mapper.Map<List<ResultProductsWithCategoryDto>>(values);
+    }
+
+
 }
