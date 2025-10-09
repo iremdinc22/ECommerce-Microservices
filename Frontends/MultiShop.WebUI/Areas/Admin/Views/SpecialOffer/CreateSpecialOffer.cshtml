@@ -1,7 +1,7 @@
-@model UpdateFeatureSliderDto
+@model CreateSpecialOfferDto
 
 @{
-    ViewData["Title"] = "UpdateFeatureSlider";
+    ViewData["Title"] = "CreateSpecialOffer";
     Layout = "~/Areas/Admin/Views/AdminLayout/Index.cshtml";
 }
 
@@ -9,21 +9,21 @@
     <div class="row">
         <div class="col-md-12">
             <div class="chart-box">
-                <h4>Öne Çıkanlar Slider Görseli Güncelleme Sayfası</h4>
+                <h4>Özel Teklif Ekleme Sayfası</h4>
                 <br/>
                 <div class="bs-example" data-example-id="bordered-table">
                     <form method="post">
-                        <input type="hidden" asp-for="FeatureSliderId"/>
-                        <label>Görsel Başlığı</label>
+                        <label>Teklif Başlığı</label>
                         <input type="text" class="form-control" asp-for="Title"/>
                         <br/>
-                        <label>Görsel Açıklaması</label>
-                        <input type="text" class="form-control" asp-for="Description"/>
+                        <label>Teklif Alt Başlığı</label>
+                        <input type="text" class="form-control" asp-for="SubTitle"/>
                         <br/>
-                        <label>Görsel Linki</label>
+                        <label>Teklif Görseli</label>
                         <input type="text" class="form-control" asp-for="ImageUrl"/>
                         <br/>
-                        <button class="btn btn-success">Öne Çıkan Slider Görselini Güncelle</button>
+                        
+                        <button class ="btn btn-primary">Özel Teklifi Ekle</button>
                     </form>
                 </div>
             </div>
