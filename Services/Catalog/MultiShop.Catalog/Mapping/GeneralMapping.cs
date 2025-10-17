@@ -27,7 +27,12 @@ public class GeneralMapping : Profile
         CreateMap<Product, CreateProductDto>().ReverseMap();
         CreateMap<Product, UpdateProductDto>().ReverseMap();
         CreateMap<Product, GetByIdProductDto>().ReverseMap();
-        CreateMap<Product, ResultProductsWithCategoryDto>().ReverseMap();
+        //CreateMap<Product, ResultProductsWithCategoryDto>().ReverseMap();
+        
+        // Üst düzey CategoryName alanını Category.CategoryName'den doldur
+        CreateMap<Product, ResultProductsWithCategoryDto>()
+            .ForMember(d => d.CategoryName, o => o.MapFrom(s => s.Category.CategoryName));
+        
         
         CreateMap<ProductDetail, ResultProductDetailDto>().ReverseMap();
         CreateMap<ProductDetail, CreateProductDetailDto>().ReverseMap();
