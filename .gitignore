@@ -27,11 +27,6 @@ Thumbs.db
 # ---- Config / Secrets ----
 *.env
 .env.*
-# Ignore all appsettings.json in all folders
-**/appsettings.json
-**/appsettings.*.json
-secrets.json
-**/Properties/launchSettings.json
 
 # ---- Docker ----
 docker-compose.override.yml
