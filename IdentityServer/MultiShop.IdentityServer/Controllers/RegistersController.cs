@@ -22,6 +22,7 @@ namespace MultiShop.IdentityServer.Controllers
 
         // POST: api/registers
         [HttpPost]
+        [AllowAnonymous]
         public async Task<IActionResult> UserRegister(UserRegisterDto userRegisterDto)
         {
             var user = new ApplicationUser
