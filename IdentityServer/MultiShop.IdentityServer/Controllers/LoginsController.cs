@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using MultiShop.IdentityServer.Dtos;
 using MultiShop.IdentityServer.Models;
-using MultiShop.IdentityServer.Tools; // <-- Buranın altı kırmızıysa Tools klasöründeki namespace'i kontrol etmelisin
+using MultiShop.IdentityServer.Tools; 
 using System.Threading.Tasks;
 
 namespace MultiShop.IdentityServer.Controllers
