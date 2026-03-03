@@ -2,7 +2,8 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using MultiShop.WebUI.Services.Concrete;
 using MultiShop.WebUI.Services.Interfaces;
-using IdentityModel.AspNetCore; // dotnet add package IdentityModel.AspNetCore yüklü olmalı
+using IdentityModel.AspNetCore;
+using MultiShop.WebUI.Settings; // dotnet add package IdentityModel.AspNetCore yüklü olmalı
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -38,8 +39,12 @@ builder.Services.AddAccessTokenManagement();
 
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<ILoginService, LoginService>();
+builder.Services.AddHttpClient<IIdentityService, IdentityService>();
 builder.Services.AddHttpClient();
 builder.Services.AddControllersWithViews();
+
+builder.Services.Configure<ClientSettings>(builder.Configuration.GetSection("ClientSettings"));
+builder.Services.Configure<ServiceApiSettings>(builder.Configuration.GetSection("ServiceApiSettings"));
 
 var app = builder.Build();
 
