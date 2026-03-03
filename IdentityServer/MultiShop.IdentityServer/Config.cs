@@ -1,10 +1,10 @@
 using System.Collections.Generic;
 using Duende.IdentityServer.Models;
-using Duende.IdentityServer;  
+using Duende.IdentityServer;
 
 using System.Collections.Generic;
 using Duende.IdentityServer.Models;
-using Duende.IdentityServer;  
+using Duende.IdentityServer;
 
 namespace MultiShop.IdentityServer;
 
@@ -18,7 +18,11 @@ public static class Config
             new ApiResource("ResourceOrder"){Scopes={"OrderFullPermission"}},
             new ApiResource("ResourceCargo"){Scopes={"CargoFullPermission"}},
             new ApiResource("ResourceBasket"){Scopes={"BasketFullPermission"}},
-             new ApiResource(IdentityServerConstants.LocalApi.ScopeName)
+            new ApiResource("ResourcePayment"){Scopes={ "PaymentFullPermission" } },
+            new ApiResource("ResourceImage"){Scopes={ "ImageFullPermission" } },
+            new ApiResource("ResourceOcelot"){Scopes={"OcelotFullPermission"} },
+            new ApiResource("ResourceMessage"){Scopes={"MessageFullPermission"} },
+            new ApiResource(IdentityServerConstants.LocalApi.ScopeName)
         };
 
     // Identity Resources (OpenID Connect standartları)
@@ -28,22 +32,27 @@ public static class Config
             new IdentityResources.Email(),
             new IdentityResources.Profile()
         };
-    
+
     // API Scopes
-   public static IEnumerable<ApiScope> ApiScopes => new ApiScope[]
-       {
+    public static IEnumerable<ApiScope> ApiScopes => new ApiScope[]
+        {
            new ApiScope("CatalogFullPermission","Full authority for catalog operations"),
            new ApiScope("CatalogReadPermission","Reading authority for catalog operations"),
            new ApiScope("DiscountFullPermission","Full authority for discount operations"),
            new ApiScope("OrderFullPermission","Full authority for order operations"),
            new ApiScope("CargoFullPermission","Full authority for cargo operations"),
            new ApiScope("BasketFullPermission","Full authority for basket operations"),
+           new ApiScope("CommentFullPermission","Full authority for comment operations"),
+           new ApiScope("PaymentFullPermission","Full authority for payment operations"),
+           new ApiScope("ImageFullPermission","Full authority for image operations"),
+           new ApiScope("OcelotFullPermission","Full authority for ocelot operations"),
+           new ApiScope("MessageFullPermission","Full authority for message operations"),
            new ApiScope(IdentityServerConstants.LocalApi.ScopeName)
 
-       };
-   
-   public static IEnumerable<Client> Clients => new Client[]
-   {
+        };
+
+    public static IEnumerable<Client> Clients => new Client[]
+    {
        //Visitor
        new Client
        {
@@ -51,7 +60,7 @@ public static class Config
            ClientName = "Multi Shop Visitor User",
            AllowedGrantTypes = GrantTypes.ClientCredentials,
            ClientSecrets = { new Secret("multishopsecret".Sha256()) },
-           AllowedScopes = {"CatalogReadPermission"}
+           AllowedScopes = {"CatalogReadPermission", "OcelotFullPermission"}
        },
    
        //Manager
@@ -61,7 +70,7 @@ public static class Config
            ClientName = "Multi Shop Manager User",
            AllowedGrantTypes = GrantTypes.ResourceOwnerPassword,
            ClientSecrets = { new Secret("multishopsecret".Sha256()) },
-           AllowedScopes = { "CatalogFullPermission", "CatalogReadPermission" }
+           AllowedScopes = { "CatalogFullPermission", "CatalogReadPermission", "OcelotFullPermission"}
        },
    
        //Admin
@@ -73,7 +82,7 @@ public static class Config
            ClientSecrets = { new Secret("multishopsecret".Sha256()) },
            AllowedScopes =
            {
-               "CatalogFullPermission","CatalogReadPermission","DiscountFullPermission","OrderFullPermission","CargoFullPermission", "BasketFullPermission",
+               "CatalogFullPermission","CatalogReadPermission","DiscountFullPermission","OrderFullPermission","CargoFullPermission", "BasketFullPermission", "OcelotFullPermission",
                IdentityServerConstants.LocalApi.ScopeName,
                IdentityServerConstants.StandardScopes.Email,
                IdentityServerConstants.StandardScopes.OpenId,
@@ -81,6 +90,7 @@ public static class Config
            },
            AccessTokenLifetime = 600
        }
-   };
+    };
 
 }
+
