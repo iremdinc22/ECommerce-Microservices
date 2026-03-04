@@ -70,7 +70,9 @@ builder.Services.AddHttpClient<ICategoryService, CategoryService>(opt =>
 var app = builder.Build();
 
 // Middleware sıralaması
+app.MapStaticAssets(); // .NET 9 için yeni ve daha güçlü statik dosya yönetimi
 app.UseStaticFiles();
+
 app.UseRouting();
 
 app.UseAuthentication(); 
@@ -80,3 +82,4 @@ app.MapControllerRoute(name: "areas", pattern: "{area:exists}/{controller=Home}/
 app.MapControllerRoute(name: "default", pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();
+
