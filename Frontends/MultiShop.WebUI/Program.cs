@@ -12,7 +12,10 @@ using MultiShop.WebUI.Services.CatalogServices.FeatureServices;
 using MultiShop.WebUI.Services.CatalogServices.FeatureSliderServices;
 using MultiShop.WebUI.Services.CatalogServices.OfferDiscountServices;
 using MultiShop.WebUI.Services.CatalogServices.BrandServices;
-using MultiShop.WebUI.Services.CatalogServices.AboutServices; // dotnet add package IdentityModel.AspNetCore yüklü olmalı
+using MultiShop.WebUI.Services.CatalogServices.AboutServices;
+using MultiShop.WebUI.Services.CatalogServices.ProductImageServices;
+using MultiShop.WebUI.Services.CatalogServices.ProductDetailServices;
+using MultiShop.WebUI.Services.CommentServices; // dotnet add package IdentityModel.AspNetCore yüklü olmalı
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -109,7 +112,20 @@ builder.Services.AddHttpClient<IAboutService, AboutService>(opt =>
     opt.BaseAddress = new Uri($"{values.OcelotUrl}/{values.Catalog.Path}");
 }).AddHttpMessageHandler<ClientCredentialTokenHandler>();
 
+builder.Services.AddHttpClient<IProductImageService, ProductImageService>(opt =>
+{
+    opt.BaseAddress = new Uri($"{values.OcelotUrl}/{values.Catalog.Path}");
+}).AddHttpMessageHandler<ClientCredentialTokenHandler>();
 
+builder.Services.AddHttpClient<IProductDetailService, ProductDetailService>(opt =>
+{
+    opt.BaseAddress = new Uri($"{values.OcelotUrl}/{values.Catalog.Path}");
+}).AddHttpMessageHandler<ClientCredentialTokenHandler>();
+
+builder.Services.AddHttpClient<ICommentService, CommentService>(opt =>
+{
+    opt.BaseAddress = new Uri($"{values.OcelotUrl}/{values.Comment.Path}");
+}).AddHttpMessageHandler<ClientCredentialTokenHandler>();
 
 var app = builder.Build();
 

@@ -1,30 +1,21 @@
 using Microsoft.AspNetCore.Mvc;
-using MultiShop.DtoLayer.CatalogDtos.CategoryDtos;
 using MultiShop.DtoLayer.CatalogDtos.ProductDtos;
+using MultiShop.WebUI.Services.CatalogServices.ProductServices;
 using Newtonsoft.Json;
 
-namespace MultiShop.WebUI.ViewComponents.ProductListViewComponents;
-
-public class _ProductListComponentPartial : ViewComponent
+namespace MultiShop.WebUI.ViewComponents.ProductListViewComponents
 {
-    private readonly IHttpClientFactory _httpClientFactory;
-
-    public _ProductListComponentPartial(IHttpClientFactory httpClientFactory)
+    public class _ProductListComponentPartial : ViewComponent
     {
-        _httpClientFactory = httpClientFactory;
-    }
-    
-    public async Task <IViewComponentResult> InvokeAsync(string id)
-    {
-        var client = _httpClientFactory.CreateClient();
-        var ResponseMessage = await client.GetAsync("http://localhost:5003/api/Products/ProductListWithCategoryByCategoryId?id=" +id);
-        if (ResponseMessage.IsSuccessStatusCode)
+        private readonly IProductService _productService;
+        public _ProductListComponentPartial(IProductService productService)
         {
-            var JsonData = await ResponseMessage.Content.ReadAsStringAsync();
-            var values = JsonConvert.DeserializeObject<List<ResultProductsWithCategoryDto>>(JsonData);
+            _productService = productService;
+        }
+        public async Task<IViewComponentResult> InvokeAsync(string id)
+        {
+            var values = await _productService.GetProductsWithCategoryByCatetegoryIdAsync(id);
             return View(values);
         }
-        return View(); 
     }
-    
 }

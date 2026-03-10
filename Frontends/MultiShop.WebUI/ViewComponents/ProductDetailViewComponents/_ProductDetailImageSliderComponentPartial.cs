@@ -1,29 +1,22 @@
 using Microsoft.AspNetCore.Mvc;
+using MultiShop.DtoLayer.CatalogDtos.ProductDtos;
 using MultiShop.DtoLayer.CatalogDtos.ProductImageDtos;
+using MultiShop.WebUI.Services.CatalogServices.ProductImageServices;
 using Newtonsoft.Json;
 
-namespace MultiShop.WebUI.ViewComponents.ProductDetailViewComponents;
-
-public class _ProductDetailImageSliderComponentPartial : ViewComponent
+namespace MultiShop.WebUI.ViewComponents.ProductDetailViewComponents
 {
-    private readonly IHttpClientFactory _httpClientFactory;
-    public _ProductDetailImageSliderComponentPartial(IHttpClientFactory httpClientFactory)
+    public class _ProductDetailImageSliderComponentPartial : ViewComponent
     {
-        _httpClientFactory = httpClientFactory;
-    }
-        
- 
-    public async Task <IViewComponentResult> InvokeAsync(string id)
-    {
-        var client = _httpClientFactory.CreateClient();
-        var responseMessage = await client.GetAsync($"http://localhost:5003/api/ProductImages/ProductImagesByProductId?id=" +id);
-        if (responseMessage.IsSuccessStatusCode)
+        private readonly IProductImageService _productImageService;
+        public _ProductDetailImageSliderComponentPartial(IProductImageService productImageService)
         {
-            var JsonData = await responseMessage.Content.ReadAsStringAsync();
-            var values = JsonConvert.DeserializeObject<GetByIdProductImageDto>(JsonData);
+            _productImageService = productImageService;
+        }
+        public async Task<IViewComponentResult> InvokeAsync(string id)
+        {
+            var values = await _productImageService.GetByProductIdProductImageAsync(id);
             return View(values);
         }
-        return View();
-     }
-     
+    }
 }
