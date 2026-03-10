@@ -1,123 +1,75 @@
-using System.Text;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using MultiShop.DtoLayer.CatalogDtos.SpecialOfferDtos;
+using MultiShop.WebUI.Services.CatalogServices.SpecialOfferServices;
 using Newtonsoft.Json;
+using System.Text;
 
 namespace MultiShop.WebUI.Areas.Admin.Controllers
 {
     [Area("Admin")]
     [Route("Admin/SpecialOffer")]
-    [AllowAnonymous]
     public class SpecialOfferController : Controller
     {
-        private readonly IHttpClientFactory _httpClientFactory;
+        private readonly ISpecialOfferService _specialOfferService;
+        public SpecialOfferController(ISpecialOfferService specialOfferService)
+        {
+            _specialOfferService = specialOfferService;
+        }
 
-        public SpecialOfferController(IHttpClientFactory httpClientFactory)
+        void SpecialOfferViewBagList()
         {
-            _httpClientFactory = httpClientFactory;
+            ViewBag.v1 = "Ana Sayfa";
+            ViewBag.v2 = "Özel Teklifler";
+            ViewBag.v3 = "Özel Teklif ve Günün İndirim Listesi";
+            ViewBag.v0 = "Kategori İşlemleri";
         }
-        
+
         [Route("Index")]
-        public async Task<ActionResult> Index()
+        public async Task<IActionResult> Index()
         {
-            ViewBag.vo = "Özel Teklif İşlemleri";
-            ViewBag.v1 = "Anasayfa";
-            ViewBag.v2 = "Özel Teklifler";
-            ViewBag.v3 = "Özel Teklif Ve Günün İndirimi Listesi";
-            
-            var client = _httpClientFactory.CreateClient();
-            var ResponseMessage = await client.GetAsync("http://localhost:5003/api/SpecialOffers");
-            if (ResponseMessage.IsSuccessStatusCode)
-            {
-                var JsonData = await ResponseMessage.Content.ReadAsStringAsync();
-                var values = JsonConvert.DeserializeObject<List<ResultSpecialOfferDto>>(JsonData);
-                return View(values);
-            }
-            return View();
+            SpecialOfferViewBagList();
+            var values = await _specialOfferService.GetAllSpecialOfferAsync();
+            return View(values);
         }
-        
-        
-       [Route("CreateSpecialOffer")]
-       [HttpGet]
-       public async Task<ActionResult> CreateSpecialOffer()
-        {
-            ViewBag.vo = "Özel Teklif İşlemleri";
-            ViewBag.v1 = "Anasayfa";
-            ViewBag.v2 = "Özel Teklifler";
-            ViewBag.v3 = "Yeni Özel Teklif Girişi";
-            return View();
-        }
-        
+
+        [HttpGet]
         [Route("CreateSpecialOffer")]
-        [HttpPost]
-        public async Task<ActionResult> CreateSpecialOffer(CreateSpecialOfferDto createSpecialOfferDto)
+        public IActionResult CreateSpecialOffer()
         {
-            var client = _httpClientFactory.CreateClient();
-            var jsonData = JsonConvert.SerializeObject(createSpecialOfferDto);
-            StringContent stringcontent = new StringContent(jsonData , Encoding.UTF8 , "application/json");
-            var responseMessage = await client.PostAsync("http://localhost:5003/api/SpecialOffers", stringcontent);
-            if (responseMessage.IsSuccessStatusCode)
-            {
-                return RedirectToAction("Index", "SpecialOffer", new { area = "Admin" });
-            }
+            SpecialOfferViewBagList();
             return View();
         }
-        
+
+        [HttpPost]
+        [Route("CreateSpecialOffer")]
+        public async Task<IActionResult> CreateSpecialOffer(CreateSpecialOfferDto createSpecialOfferDto)
+        {
+            await _specialOfferService.CreateSpecialOfferAsync(createSpecialOfferDto);
+            return RedirectToAction("Index", "SpecialOffer", new { area = "Admin" });
+        }
+
+        [Route("DeleteSpecialOffer/{id}")]
+        public async Task<IActionResult> DeleteSpecialOffer(string id)
+        {
+            await _specialOfferService.DeleteSpecialOfferAsync(id);
+            return RedirectToAction("Index", "SpecialOffer", new { area = "Admin" });
+        }
+
         [Route("UpdateSpecialOffer/{id}")]
         [HttpGet]
         public async Task<IActionResult> UpdateSpecialOffer(string id)
         {
-            ViewBag.vo = "Özel Teklif İşlemleri";
-            ViewBag.v1 = "Anasayfa";
-            ViewBag.v2 = "Özel Teklifler";
-            ViewBag.v3 = "Özel Teklif Güncelleme Sayfası";
-            
-            var client = _httpClientFactory.CreateClient();
-            var responseMessage = await client.GetAsync($"http://localhost:5003/api/SpecialOffers/{id}");
-            if (responseMessage.IsSuccessStatusCode)
-            {
-                var JsonData = await responseMessage.Content.ReadAsStringAsync();
-                var values = JsonConvert.DeserializeObject<UpdateSpecialOfferDto>(JsonData);
-                return View(values);
-            }
-            return View();
+            SpecialOfferViewBagList();
+            var values = await _specialOfferService.GetByIdSpecialOfferAsync(id);
+            return View(values);
         }
-        
         [Route("UpdateSpecialOffer/{id}")]
         [HttpPost]
         public async Task<IActionResult> UpdateSpecialOffer(UpdateSpecialOfferDto updateSpecialOfferDto)
         {
-            var client = _httpClientFactory.CreateClient();
-            var jsonData = JsonConvert.SerializeObject(updateSpecialOfferDto);
-            StringContent stringcontent = new StringContent(jsonData, Encoding.UTF8, "application/json");
-            var responseMessage = await client.PutAsync($"http://localhost:5003/api/SpecialOffers/",stringcontent);
-            if (responseMessage.IsSuccessStatusCode)
-            {
-                
-                return RedirectToAction("Index", "SpecialOffer", new { area = "Admin" });  
-            }
-            
-            return View();
-            
+            await _specialOfferService.UpdateSpecialOfferAsync(updateSpecialOfferDto);
+            return RedirectToAction("Index", "SpecialOffer", new { area = "Admin" });
         }
-        
-        [Route("DeleteSpecialOffer/{id}")]
-        public async Task<IActionResult> DeleteSpecialOffer(string id)
-        {
-            var client = _httpClientFactory.CreateClient();
-            var responseMessage = await client.DeleteAsync($"http://localhost:5003/api/SpecialOffers?id={id}");
-            if (responseMessage.IsSuccessStatusCode)
-            {
-                return RedirectToAction("Index", "SpecialOffer", new { area = "Admin" });
-            }
-            return View();
-        }
-        
-        
-        
-        
-
     }
 }
