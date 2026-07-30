@@ -10,7 +10,6 @@ using MultiShop.DtoLayer.IdentityDtos.LoginDtos;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using System.Security.Claims;
-using AspNetCoreGeneratedDocument;
 using MultiShop.WebUI.Services.Concrete;
 using MultiShop.WebUI.Services.Interfaces;
 
@@ -50,4 +49,6 @@ namespace MultiShop.WebUI.Controllers
 
     }
 }
+
+
 
